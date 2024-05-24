@@ -1,0 +1,7 @@
+1. mkvirtualenv <name>
+
+2. pip install django
+
+3. pip install djangorestframework
+
+4.code . (shortcut for openning vscode)
