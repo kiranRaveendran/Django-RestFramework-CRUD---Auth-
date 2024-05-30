@@ -15,6 +15,18 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+# Set Password: The set_password() method is called on the user object to
+# set the password. This is a security measure provided by Django to properly hash and store passwords securely.
+
+
+class LoginSerializer(serializers.ModelSerializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+
 
 class STDSerializer(serializers.ModelSerializer):
     class Meta:
