@@ -1,0 +1,499 @@
+Referance : 1. https://www.youtube.com/watch?v=U0gbZfIMP9Y&list=PLKcvQn8OTDUaYhbm0XtYlaVDlKhM-Al1M&index=14
+
+	    2. https://www.youtube.com/watch?v=WpROJbxr5zg&list=PLYgCneMz92X0b4Eyx51mx9tcJdjg0ywqM&index=12
+
+
+REST FRAMEwoR
+**************
+Representational State Transfer (REST) is a software architecture that imposes conditions on how an API should work. REST was initially created as a guideline to manage communication on a complex network like the internet.
+
+Types of Views 
+1. Function Based Views - @api_view([‘GET', 'POST'])
+2. Class Based  - class ClassName(APIView):
+3. Generic Views - class ClassName(generics.ListCreateAPIView):
+		   class ClassName(generics.CreateAPIView):
+		   class ClassName(generics.DestroyAPIView):
+
+4. ViewSets - class UserViewSet(viewsets.ViewSet):
+5.Mixins  -   class MyModelViewSet(mixins.ListModelMixin,
+                     mixins.CreateModelMixin,
+                     mixins.RetrieveModelMixin,
+                     mixins.UpdateModelMixin,
+                     mixins.DestroyModelMixin,):
+
+Discribe:Mixins are sometimes described as being "included" rather than "inherited".
+ 
+Definition: A class that contains methods for use by other classes without having to be the parent class of those other classes. 
+	
+
+
+
+
+************
+@api_view  : function based view
+************
+
+Extension : from rest_framework.decorators import api_view
+
+views.py : 
+
+@api_view(['POST', 'GET', 'PUT', 'PATCH', 'DELETE'])
+def function_name(request): 
+	//body// 
+
+
+The @api_view decorator is part of Django REST Framework (DRF) and is used to create views that work with DRF's request/response objects. This decorator allows you to define views using function-based views rather than class-based views, which can be more concise for simple cases.
+
+Here's a brief overview of how the @api_view decorator works:
+
+Decorator Usage: 
+
+You apply the @api_view decorator to your view function, specifying the HTTP methods that the view should respond to. For example, @api_view(['GET', 'POST']) indicates that the view will handle GET and POST requests.
+
+Request Handling: 
+
+Inside the decorated function, you access the request object as the first argument. This request object is an instance of Django's HttpRequest class extended by DRF to provide additional functionality.
+
+Response Handling: 
+
+Instead of manually creating HTTP responses using Django's HttpResponse, you use DRF's Response class. This allows you to return JSON responses easily. DRF takes care of content negotiation, so the response format can be determined based on the request's Accept header.
+
+Optional Parameters: 
+
+The @api_view decorator supports optional parameters like authentication_classes and permission_classes to specify authentication and permission requirements for the view.
+
+
+
+******************
+serializer
+*****************
+
+
+In Django REST Framework (DRF), a serializer is a component used to convert complex data types, such as querysets and model instances, into native Python data types that can then be easily rendered into JSON, XML, or other content types. Additionally, serializers can also handle deserialization, converting native Python data back into complex data types.
+
+
+Serialization: 
+
+Serializers provide a way to convert complex data types, such as Django model instances or querysets, into primitive data types like dictionaries or lists. This process is known as serialization. For example, a serializer can convert a queryset of Django model instances into a JSON representation.
+
+Deserialization: 
+
+Serializers also support deserialization, which is the process of converting native Python data back into complex data types. This is useful when processing incoming data, such as data from a POST request, and converting it into Django model instances or other complex data types.
+
+Validation: 
+
+Serializers can perform validation on the data being serialized or deserialized. This includes validating field types, required fields, maximum and minimum values, and custom validation logic defined in the serializer.
+
+ModelSerializer: 
+
+DRF provides a convenient serializer class called ModelSerializer, which automatically generates serializers based on Django model definitions. ModelSerializer simplifies the process of creating serializers for Django models by automatically determining the fields to include based on the model definition.
+
+Nested Serialization: 
+
+Serializers support nested serialization, allowing you to serialize related objects and include them in the output data. This is useful for representing complex data structures or relationships between objects.
+
+Customization: 
+
+While DRF provides built-in serializers like ModelSerializer, you can also create custom serializers by subclassing Serializer or ModelSerializer and defining custom fields, validation logic, or serialization/deserialization behavior.
+
+Overall, serializers are a powerful tool in DRF for handling data conversion, validation, and representation, making it easier to build RESTful APIs with Django.
+
+--------------------------
+
+The @api_view decorator in Django REST Framework (DRF) primarily serves to define views that handle HTTP requests within a RESTful API context. When applied to a function-based view, it transforms it into an API view with several associated actions and functionalities. Here are the main actions and functionalities provided by the @api_view decorator:
+
+HTTP Method Handling: 
+
+The primary action of the @api_view decorator is to specify which HTTP methods the view should handle. This is achieved by passing a list of HTTP method names (e.g., 'GET', 'POST', 'PUT', 'DELETE') as an argument to the decorator. The decorated view function will then be invoked when the corresponding HTTP method is received by the server.
+
+
+1. GET:
+********
+
+When a client sends a GET request to a resource endpoint, it typically intends to retrieve data from the server.
+
+In a view decorated with @api_view(['GET']), the logic inside the view function will execute when a GET request is received.
+
+The view function can retrieve data from the database, external APIs, or any other source and return it as part of the response.
+
+The response can include data serialized into a format such as JSON or XML, based on the requested content type.
+
+2. POST:
+*********
+
+A POST request is used when the client wants to send data to the server, typically to create a new resource.
+
+In a view decorated with @api_view(['POST']), the logic inside the view function will execute when a POST request is received.
+
+The view function can access the data sent in the request body, validate it, and use it to create a new resource or perform any other necessary actions.
+
+The response may include information about the newly created resource, such as its unique identifier or a link to access it.
+
+3. PUT:
+********
+
+PUT requests are used to update an existing resource with new data provided by the client.
+
+In a view decorated with @api_view(['PUT']), the logic inside the view function will execute when a PUT request is received.
+
+The view function can retrieve the data sent in the request body, locate the existing resource to be updated, apply the changes, and save the updated resource to the database.
+
+The response may include information about the updated resource or a confirmation message.
+
+4. PATCH:
+**********
+
+PATCH requests are similar to PUT requests but are typically used to perform partial updates to a resource, rather than replacing it entirely.
+
+In DRF, you can handle PATCH requests by including 'PATCH' in the list of HTTP methods when using the @api_view decorator.
+
+The logic inside the view function will execute when a PATCH request is received, and it can handle the partial update operation accordingly.
+
+5. DELETE:
+***********
+
+DELETE requests are used to delete a resource from the server.
+
+In a view decorated with @api_view(['DELETE']), the logic inside the view function will execute when a DELETE request is received.
+
+The view function can locate the resource to be deleted, perform any necessary validation or authorization checks, and then delete the resource from the database.
+
+The response may include a confirmation message indicating that the resource has been successfully deleted.
+
+
+
+*******************
+Nestest serializer
+*******************
+
+This is commonly used when you have a model with related fields, and you want to include the related data in the serialized representation of the main model.
+
+in this way allows you to represent complex relationships between models and include related data in the serialized output. It's a powerful feature of DRF that simplifies the serialization of nested data structures in your API responses.
+
+
+
+************
+@api_view  : Class based view
+************
+
+extension : from rest_framework.views import APIView
+
+class ClassStudent(APIView):
+    # here we do not want to explicitly wirte the condition to check which method         is this or not like: if request.method == 'GET':
+    def get(self, request):
+         ///body///
+
+
+
+
+
+
+************
+ ViewSet
+************
+Who is handling the CRUD operations which is may be a resource or model. 
+
+viewsets are a convenient way to organize the logic for handling HTTP requests to interact with your API. They combine the logic for handling multiple related endpoints into a single class.
+There are different types of ViewSets (APIView).
+
+1. ViewSet 
+2. GenericViewSet 
+3. ModelViewSet 
+4. ReadonlyModelViewSet
+
+Combine the ligic for a set of related views in a single class. 
+Not provide any method handlers such as .get() or .post()
+
+ViewSets provides Actions such as  
+
+  def list(self, request):
+        pass
+
+    def create(self, request):
+        pass
+
+    def retrieve(self, request, pk=None):
+        pass
+
+    def update(self, request, pk=None):
+        pass
+
+    def partial_update(self, request, pk=None):
+        pass
+
+    def destroy(self, request, pk=None):
+        pass
+
+
+In Django REST Framework (DRF), a ViewSet is a class-based view that provides CRUD (Create, Retrieve, Update, Delete) operations for a particular set of resources. It combines the logic for handling different HTTP methods (GET, POST, PUT, DELETE) for a resource into a single class.
+
+ViewSets are built on top of Django's class-based views and provide a more concise and organized way to define views for RESTful APIs. They encapsulate common patterns and behaviors associated with handling API requests and responses.
+
+
+
+************
+model ViewSet
+************
+
+it handle the CRUD Operations taking place in the models.py 
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+************************
+Token authentication 
+************************
+
+Extension : from rest_framework.permissions import IsAuthenticated
+
+@Basic authentication 
+
+@Session authentication
+
+
+
+
+
+************************
+JSON Web Tokens 
+************************
+ done 
+
+
+************************
+Generic view 
+************************
+
+class StudentInfoCRUD1(generics.ListAPIView, generics.CreateAPIView):
+    queryset = StudentInfo.objects.all()
+    serializer_class = StudentInfoSerializer
+
+
+class StudentInfoCRUD2(generics.UpdateAPIView, generics.DestroyAPIView):
+    queryset = StudentInfo.objects.all()
+    serializer_class = StudentInfoSerializer
+    lookup_field = 'id'
+
+
+
+done 
+
+
+*****************************************************************************
+JWT token : referal video: https://www.youtube.com/watch?v=KLua_cYGLec
+
+https://www.youtube.com/watch?v=L9ha9WUwTtc&list=PL9IQMKMsCWh5oaw7mAizkK4ZpReoX59h9
+*****************************************************************************
+
+# how to access cash ?-----------------------------------------------------------
+# default time duration for token expiry
+# access token and refresh token this can used to only create new access token.
+
+
+permission_classes = [IsAuthenticated]
+``````````````````````````````````````
+permission_classes: This attribute specifies a list of permission classes that the view must pass before allowing access. In the provided code, [IsAuthenticated] is used, which means that only authenticated users are allowed to access this view. If an unauthenticated user tries to access the view, they will receive a permission denied response.
+
+
+authentication_classes = [TokenAuthentication]
+``````````````````````````````````````````````
+authentication_classes: This attribute specifies a list of authentication classes that DRF should use to authenticate incoming requests. In the provided code, [TokenAuthentication] is used, which means that the view expects requests to include a token in the request headers for authentication. The token should be a valid token associated with a user in the system. If the token is missing or invalid, authentication will fail, and the user will receive a 401 Unauthorized response.
+
+
+
+1. instructions for jwt token authentication 
+
+https://django-rest-framework-simplejwt.readthedocs.io/en/latest/getting_started.html
+
+
+___________________________________________
+instead of hard code can use this module:
+___________________________________________
+
+	1. pip install djangorestframework-simplejwt
+
+	2. settings.py
+	
+	REST_FRAMEWORK = {
+    ...
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        ...
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+    ...
+}
+
+	3. main project urls.py 
+
+	from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
+urlpatterns = [
+    ...
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    ...
+]
+ 
+IMPORTENT POINT: 
+
+The two endpoints (/api/token/ and /api/token/refresh/) are provided by the Simple JWT library, which is a JWT implementation specifically designed for Django REST Framework.
+
+
+TokenObtainPairView: 
+
+This view is responsible for generating a pair of tokens (access token and refresh token) when provided with valid user credentials (typically username and password).
+
+TokenRefreshView: 
+
+This view is responsible for refreshing an access token using a valid refresh token.
+
+By including these URL patterns in your Django project's urls.py, you make these endpoints accessible for token-based authentication. When a client sends a POST request to /api/token/ with valid credentials, they receive a response containing an access token and a refresh token. The access token is then used to authenticate subsequent requests to protected endpoints, while the refresh token is used to obtain new access tokens when the current one expires. The /api/token/refresh/ endpoint is used to refresh the access token using a valid refresh token.
+
+
+	4. djnago project settings.py 
+
+	from datetime import timedelta
+
+	SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+    "UPDATE_LAST_LOGIN": False,
+
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": settings.SECRET_KEY,
+    "VERIFYING_KEY": "",
+    "AUDIENCE": None,
+    "ISSUER": None,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
+
+
+
+#main project Settings.py : Installed app 
+
+INSTALLED_APPS = [
+    'rest_framework',
+    'home',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+]
+
+*****************************************************************************
+
+
+___________________________________________
+Example hard code for JWT authentication
+___________________________________________
+
+1. #Views.py
+
+class LoginAPI(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        data = request.data
+        serializer = LoginSerializer(data=data)
+        if not serializer.is_valid():
+            return Response({"message": serializer.errors, })
+
+        user_obj = authenticate(
+            username=serializer.data['username'], password=serializer.data['password'])
+        if not user_obj:
+            return Response({"message": "invalid credentials"})
+
+        try:
+            refresh = RefreshToken.for_user(user_obj)
+            return Response({'refresh': str(refresh), 'access': str(refresh.access_token), 'message': 'your data is saved'}, status=status.HTTP_200_OK)
+        except TokenError:
+            return Response({"message": "Access token generation failed. Please try again."}, status=500)
+
+
+2. #Urls.py
+
+from django.urls import path
+from . views import *
+
+urlpatterns = [
+    path('LoginAPI/', LoginAPI.as_view(), name='LoginAPI'),
+]
+
+
+
+# main project Settings.py  : Middelware
+
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+
+    ]
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
+
+
+3. # simplejwt
+REST_FRAMEWORK = {
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+    "UPDATE_LAST_LOGIN": False,
+
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": settings.SECRET_KEY,
+    "VERIFYING_KEY": "",
+    "AUDIENCE": None,
+    "ISSUER": None,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+
+}
+
+
+4. #main project Settings.py : Installed app 
+
+INSTALLED_APPS = [
+    'rest_framework',
+    'home',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+]
+
+
+
+
+******************************************************************************
+Signup using OTP in Django DRF 
+https://www.youtube.com/watch?v=41YtXPA-Jjg&list=PLdLYbRBk3sGl51Zha5fny6i5t5vVT8ytx
+******************************************************************************
+
