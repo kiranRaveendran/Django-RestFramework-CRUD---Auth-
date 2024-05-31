@@ -1,3 +1,6 @@
+from rest_framework import status
+
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
@@ -26,7 +29,7 @@ from django.utils import timezone
 
 class RegisterUser(APIView):  # class based view
     permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
+    # authentication_classes = [TokenAuthentication]
 
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -39,17 +42,47 @@ class RegisterUser(APIView):  # class based view
         return Response({'status': 200, 'payload': serializer.data,  'message': 'Your registeration is done'})
 
 
-class LoginAPI(APIView):
-    # making this permission_classes value as empty or AllowAny to make everyone can access this class url.
-    permission_classes = [AllowAny]
+# class LoginAPI(APIView):
+#     # making this permission_classes value as empty or AllowAny to make everyone can access this class url.
+#     permission_classes = [AllowAny]
 
-    # def generate_access_token(self, user):
-    #     # Define the desired expiration time
-    #     access_token_lifetime = timedelta(seconds=30)  # Example: 30 minutes
-    #     # Create an access token instance with the desired expiration time
-    #     access_token = AccessToken.for_user(user)
-    #     access_token.set_exp(access_token_lifetime)
-    #     return access_token
+#     # def generate_access_token(self, user):
+#     #     # Define the desired expiration time
+#     #     access_token_lifetime = timedelta(seconds=30)  # Example: 30 minutes
+#     #     # Create an access token instance with the desired expiration time
+#     #     access_token = AccessToken.for_user(user)
+#     #     access_token.set_exp(access_token_lifetime)
+#     #     return access_token
+
+#     def post(self, request):
+#         data = request.data
+#         serializer = LoginSerializer(data=data)
+#         if not serializer.is_valid():
+#             return Response({"message": serializer.errors, })
+
+#         user_obj = authenticate(
+#             username=serializer.data['username'], password=serializer.data['password'])
+#         if not user_obj:
+#             return Response({"message": "invalid credentials"})
+
+#         try:
+#             # access_token = self.generate_access_token(user)
+#             # refresh, = RefreshToken.for_user(user)
+#             # access_token = str(refresh.access_token)
+
+#             refresh = RefreshToken.for_user(user_obj)
+#             return Response({'refresh': str(refresh), 'access': str(refresh.access_token), 'message': 'your data is saved'}, status=status.HTTP_200_OK)
+#         except TokenError:
+#             return Response({"message": "Access token generation failed. Please try again."}, status=500)
+#         # return Response({'message': 'Login successfull', 'token': str(access_token)})
+
+# how to access cash ?-----------------------------------------------------------
+# default time duration for token expiry
+# access token and refresh token this can used to only create new access token.
+
+
+class LoginAPI(APIView):
+    # permission_classes = [AllowAny]
 
     def post(self, request):
         data = request.data
@@ -57,28 +90,21 @@ class LoginAPI(APIView):
         if not serializer.is_valid():
             return Response({"message": serializer.errors, })
 
-        user = authenticate(
+        user_obj = authenticate(
             username=serializer.data['username'], password=serializer.data['password'])
-        if not user:
+        if not user_obj:
             return Response({"message": "invalid credentials"})
 
         try:
-            # access_token = self.generate_access_token(user)
-            refresh = RefreshToken.for_user(user)
-            access_token = str(refresh.access_token)
+            refresh = RefreshToken.for_user(user_obj)
+            return Response({'refresh': str(refresh), 'access': str(refresh.access_token), 'message': 'your data is saved'}, status=status.HTTP_200_OK)
         except TokenError:
             return Response({"message": "Access token generation failed. Please try again."}, status=500)
-        # access_token = self.generate_access_token(user)
-        return Response({'message': 'Login successfull', 'token': str(access_token)})
-
-# how to access cash ?-----------------------------------------------------------
-# default time duration for token expiry
-# access token and refresh token this can used to only create new access token.
 
 
 class LogoutAPI(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
+    # authentication_classes = [TokenAuthentication]
 
     def post(self, request):
         try:
@@ -97,17 +123,16 @@ class StudentGeneric(generics.ListAPIView, generics.CreateAPIView):  # Generic v
     # ListAPIView : get method
     # CreateAPIView :post method
     permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
+    # authentication_classes = [TokenAuthentication]
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
 
 
 class ClassStudent(APIView):  # class based view
     permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
+    # authentication_classes = [TokenAuthentication]
 
     # here we do not want to explicitly wirte the condition to check which method is this or not like: if request.method == 'GET':
-
     def get(self, request):
         objstudent = Student.objects.filter()
         serializer = StudentSerializer(
@@ -121,8 +146,8 @@ class ClassStudent(APIView):  # class based view
 class StudentInfoCRUD1(generics.ListAPIView, generics.CreateAPIView):  # Generic view
     # ListAPIView : get method
     # CreateAPIView :post method
+    # authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
     queryset = StudentInfo.objects.all()
     serializer_class = StudentInfoSerializer
 
@@ -130,8 +155,8 @@ class StudentInfoCRUD1(generics.ListAPIView, generics.CreateAPIView):  # Generic
 class StudentInfoCRUD2(generics.UpdateAPIView, generics.DestroyAPIView):  # Generic view
     # UpdateAPIView : put or patch method
     # DestroyAPIView :delete method
+    # authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
     queryset = StudentInfo.objects.all()
     serializer_class = StudentInfoSerializer
     lookup_field = 'id'
@@ -140,15 +165,15 @@ class StudentInfoCRUD2(generics.UpdateAPIView, generics.DestroyAPIView):  # Gene
 @ api_view(['POST', 'GET', 'PUT', 'PATCH', 'DELETE'])  # Function based view
 def home(request):
     if request.method == 'POST':
-        return Response('POST request responds redmo')
+        return Response('POST request responds demo')
     if request.method == 'GET':
-        return Response('GET request responds redmo')
+        return Response('GET request responds demo')
     if request.method == 'PUT':
-        return Response('PUT request responds redmo')
+        return Response('PUT request responds demo')
     if request.method == 'PATCH':
-        return Response('PATCH request responds redmo')
+        return Response('PATCH request responds demo')
     if request.method == 'DELETE':
-        return Response('DELETE request responds redmo')
+        return Response('DELETE request responds demo')
 
 
 @ api_view(['POST', 'GET', 'PUT', 'PATCH', 'DELETE'])  # Function based view
