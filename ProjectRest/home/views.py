@@ -82,7 +82,7 @@ class RegisterUser(APIView):  # class based view
 
 
 class LoginAPI(APIView):
-    # permission_classes = [AllowAny]
+    permission_classes = [AllowAny]
 
     def post(self, request):
         data = request.data
