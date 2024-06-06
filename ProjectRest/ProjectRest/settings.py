@@ -77,6 +77,16 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ProjectRest.wsgi.application'
 
 
+# otp rest framework authentication
+
+EMAIL_BACKEND = 'anymail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.example.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'your_email@example.com'
+EMAIL_HOST_PASSWORD = 'your_email_password'
+
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
