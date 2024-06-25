@@ -1,6 +1,4 @@
 from rest_framework import status
-
-
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
@@ -22,13 +20,11 @@ from django.contrib.auth import authenticate
 from datetime import timedelta
 from rest_framework_simplejwt.tokens import AccessToken
 from django.utils import timezone
-# from rest_framework.paginator import PageNumberPagination
-# from rest_framework import viewsets
-# Create your views here.
 
 
 class RegisterUser(APIView):  # class based view
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [AllowAny]
+    # permission_classes = [IsAuthenticated]
     # authentication_classes = [TokenAuthentication]
 
     def post(self, request):
